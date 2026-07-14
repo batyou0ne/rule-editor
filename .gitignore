@@ -22,3 +22,12 @@
 !.env*.example
 my_notes.md
 mongodb/data/
+
+# Claude Code
+.claude/
+
+# Python virtual environments
+eFLINT_reasoner_backend/.venv/
+
+# Claude Code (personal tool config)
+.claude/
