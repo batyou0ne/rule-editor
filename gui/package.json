@@ -17,6 +17,7 @@
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
     "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
     "mongodb": "^7.1.0",
     "quasar": "^2.10.0",
     "quasar-app-extension-qdraggabletree": "^2.0.5",

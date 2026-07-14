@@ -8,6 +8,7 @@ const eflintExecuteBaseUrl = process.env.VITE_EFLINT_EXECUTE_URL || "http://loca
 const eflintServerBaseUrl = process.env.VITE_EFLINT_SERVER_BASE_URL || "http://localhost:8080";
 const authApiBaseUrl = process.env.VITE_AUTH_API_BASE_URL || "http://localhost:8101";
 const mongoApiBaseUrl = process.env.VITE_MONGO_API_BASE_URL || "http://localhost:8102";
+const gitServiceBaseUrl = process.env.VITE_GIT_SERVICE_BASE_URL || "http://localhost:8103";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -103,6 +104,18 @@ export default defineConfig({
         target: mongoApiBaseUrl,
         secure: false,
         changeOrigin: true,
+      },
+      "/github-api": {
+        target: "https://api.github.com",
+        secure: true,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/github-api/, ""),
+      },
+      "/git-service": {
+        target: gitServiceBaseUrl,
+        secure: false,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/git-service/, ""),
       },
     },
   },
