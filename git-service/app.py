@@ -13,6 +13,7 @@ load_dotenv()
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GITHUB_API = "https://api.github.com"
+ALERT_WEBHOOK_URL = os.getenv("ALERT_WEBHOOK_URL", "")
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,http://127.0.0.1:5173",
@@ -43,6 +44,16 @@ class PushResponse(BaseModel):
     repo_url: str
     branch: str
     pushed: List[FilePushResult]
+
+
+async def _send_alert(message: str) -> None:
+    if not ALERT_WEBHOOK_URL:
+        return
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            await client.post(ALERT_WEBHOOK_URL, json={"text": message})
+    except Exception:
+        pass  # alert failure must never break the main flow
 
 
 def _gh_headers() -> dict:
@@ -166,6 +177,18 @@ async def push(req: PushRequest):
             pushed.append(FilePushResult(path=path, status="updated" if sha else "created"))
 
     return PushResponse(repo_url=repo_url, branch=branch, pushed=pushed)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc: HTTPException):
+    if exc.status_code >= 500 or "Failed to push" in str(exc.detail):
+        await _send_alert(
+            f":x: *FLINT git-service error*\n"
+            f"Status: {exc.status_code}\n"
+            f"Detail: {exc.detail}"
+        )
+    from fastapi.responses import JSONResponse
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
 #! Start the service
 if __name__ == "__main__":
