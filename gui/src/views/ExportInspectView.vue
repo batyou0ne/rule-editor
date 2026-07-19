@@ -477,6 +477,7 @@ export default {
         this.github.repoUrl = data.repo_url
         this.saveGithubSettings()
 
+        log(`Version: ${data.version}`, 'info')
         for (const f of data.pushed) {
           log(`✓ ${f.path} (${f.status})`, 'ok')
         }

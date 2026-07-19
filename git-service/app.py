@@ -43,6 +43,7 @@ class FilePushResult(BaseModel):
 class PushResponse(BaseModel):
     repo_url: str
     branch: str
+    version: str
     pushed: List[FilePushResult]
 
 
@@ -62,6 +63,27 @@ def _gh_headers() -> dict:
         "Accept": "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
     }
+
+
+async def _next_version(client, repo: str, slug: str, branch: str, headers: dict) -> str:
+    """Return the next version folder name (v1, v2, ...) for a given task slug."""
+    res = await client.get(
+        f"/repos/{repo}/contents/{slug}",
+        headers=headers,
+        params={"ref": branch},
+    )
+    if not res.is_success:
+        return "v1"
+    entries = res.json()
+    if not isinstance(entries, list):
+        return "v1"
+    version_numbers = []
+    for entry in entries:
+        name = entry.get("name", "")
+        if name.startswith("v") and name[1:].isdigit():
+            version_numbers.append(int(name[1:]))
+    next_n = max(version_numbers) + 1 if version_numbers else 1
+    return f"v{next_n}"
 
 
 @app.get("/health")
@@ -140,9 +162,20 @@ async def push(req: PushRequest):
             branch = repo_data.get("default_branch", "main")
             repo_url = repo_data.get("html_url", repo_url)
 
+        # Determine slug (first path component) and next version folder
+        first_path = next(iter(req.files))
+        slug = first_path.split("/")[0]
+        version = await _next_version(client, req.repo, slug, branch, headers)
+
+        # Rewrite paths: {slug}/file → {slug}/{version}/file
+        versioned_files = {}
+        for path, content in req.files.items():
+            rest = "/".join(path.split("/")[1:])
+            versioned_files[f"{slug}/{version}/{rest}"] = content
+
         #! PUSH EACH FILE
         pushed: List[FilePushResult] = []
-        for path, content in req.files.items():
+        for path, content in versioned_files.items():
             encoded = base64.b64encode(content.encode("utf-8")).decode("ascii")
 
             #? Fetch existing SHA so GitHub allows updating the file. Github collision protection.
@@ -176,7 +209,7 @@ async def push(req: PushRequest):
 
             pushed.append(FilePushResult(path=path, status="updated" if sha else "created"))
 
-    return PushResponse(repo_url=repo_url, branch=branch, pushed=pushed)
+    return PushResponse(repo_url=repo_url, branch=branch, version=version, pushed=pushed)
 
 
 @app.exception_handler(HTTPException)
