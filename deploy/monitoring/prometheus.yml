@@ -17,6 +17,7 @@ scrape_configs:
           - http://auth-service:8001/health
           - http://flint-to-eflint:8000/health
           - http://mongo-api:8002/health
+          - http://git-service:8103/health
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
