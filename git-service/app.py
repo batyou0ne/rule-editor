@@ -46,7 +46,7 @@ class PushResponse(BaseModel):
     version: str
     pushed: List[FilePushResult]
 
-
+#!SLACK ALERT
 async def _send_alert(message: str) -> None:
     if not ALERT_WEBHOOK_URL:
         return
@@ -64,7 +64,7 @@ def _gh_headers() -> dict:
         "X-GitHub-Api-Version": "2022-11-28",
     }
 
-
+#?! V1, V2 control
 async def _next_version(client, repo: str, slug: str, branch: str, headers: dict) -> str:
     """Return the next version folder name (v1, v2, ...) for a given task slug."""
     res = await client.get(
@@ -162,7 +162,7 @@ async def push(req: PushRequest):
             branch = repo_data.get("default_branch", "main")
             repo_url = repo_data.get("html_url", repo_url)
 
-        # Determine slug (first path component) and next version folder
+        #! Determine slug (first path component) and next version folder
         first_path = next(iter(req.files))
         slug = first_path.split("/")[0]
         version = await _next_version(client, req.repo, slug, branch, headers)
@@ -211,7 +211,7 @@ async def push(req: PushRequest):
 
     return PushResponse(repo_url=repo_url, branch=branch, version=version, pushed=pushed)
 
-
+#! PUSHING THE ALERT
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc: HTTPException):
     if exc.status_code >= 500 or "Failed to push" in str(exc.detail):

@@ -135,17 +135,16 @@
       <div class="col-12 col-lg-6">
         <q-card flat bordered>
           <q-card-section>
-            <div class="row items-center q-gutter-sm">
-              <div class="text-subtitle1">Queries</div>
-              <q-btn flat dense label="Select all acts" @click="selectAllQueries" />
-              <q-btn flat dense label="Select none" @click="selectNoneQueries" />
-            </div>
+            <div class="text-subtitle1">Queries</div>
           </q-card-section>
 
           <q-separator />
 
           <q-card-section>
-            <q-list bordered separator class="q-mt-sm">
+            <q-btn flat label="Select all shown" class="q-mr-sm" @click="selectAllQueries" />
+            <q-btn flat label="Select none" @click="selectNoneQueries" />
+
+            <q-list bordered separator class="q-mt-md">
               <q-item v-for="f in actFrames" :key="`query-${f.id}`" :class="queryItemClass(f.id)">
                 <q-item-section avatar>
                   <q-checkbox :model-value="querySelectedIds.includes(f.id)" @click.stop="toggleQuery(f.id)" />
@@ -497,7 +496,7 @@ export default {
 
     queryResultLines() {
       return this.querySelectedFrames
-        .map((f) => `?Holds(${this.buildActTerm(f, this.queryActSelections[f.id] || {})}).`);
+        .map((f) => `?Enabled(${this.buildActTerm(f, this.queryActSelections[f.id] || {})}).`);
     },
 
     queryResultText() {
@@ -873,7 +872,7 @@ export default {
         .split("\n")
         .map((line) => line.trim())
         .filter((line) => line.length > 0)
-        .filter((line) => line.startsWith("?Holds("));
+        .filter((line) => line.startsWith("?Enabled("));
     },
 
     queryItemClass(frameId) {
@@ -1050,7 +1049,7 @@ export default {
       try {
         const queryPairs = this.buildQueryFramePairs();
         if (!queryPairs.length) {
-          throw new Error("No ?Holds(...) queries found to execute");
+          throw new Error("No ?Enabled(...) queries found to execute");
         }
 
         const sessionId = await this.ensureEflintServerSession();
@@ -1063,7 +1062,7 @@ export default {
         const statusByFrame = {};
 
         for (const { frameId, query } of queryPairs) {
-          const resp = await fetch(buildEflintServerUrl("/query/holds"), {
+          const resp = await fetch(buildEflintServerUrl("/query/enabled"), {
             method: "POST",
             headers,
             body: JSON.stringify({ text: query }),
