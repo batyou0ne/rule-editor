@@ -10,7 +10,7 @@
         frame.shortName?.length > 0 ? frame.shortName : frame.typeId
       }}
     </div>
-    <q-tooltip class="bg-blue-1 text-grey-10 text-body2">
+    <q-tooltip>
       <div style="max-width: 300px">
         {{ frame.fullName != "" ? frame.fullName : "- no full name given yet -" }}
       </div>
@@ -125,13 +125,15 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
-
 .frame-label {
   border-radius: 4px;
-  padding: 4px 6px;
-  font-size: 10pt;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
   line-height: 1rem;
   margin: 2px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 </style>

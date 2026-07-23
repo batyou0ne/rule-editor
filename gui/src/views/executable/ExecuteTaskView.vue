@@ -367,10 +367,10 @@ export default {
 
 <style scoped>
 .repl-terminal {
-  background: #000;
-  color: #d4ffd4;
+  background: #0D1B2A;
+  color: #C8D4E8;
   border-radius: 6px;
-  border: 1px solid #333;
+  border: 1px solid #1B2A4A;
   min-height: 260px;
   max-height: 420px;
   overflow: auto;

@@ -39,8 +39,20 @@ myApp.use(store);
 myApp.use(Quasar, {
   plugins: {
     Notify,
-  }, // import Quasar plugins and add here
+  },
   iconSet: quasarIconSet,
+  config: {
+    brand: {
+      primary: '#1B2A4A',
+      secondary: '#3A7CA5',
+      accent: '#C7963E',
+      dark: '#0D1B2A',
+      positive: '#2E7D32',
+      negative: '#C62828',
+      info: '#0277BD',
+      warning: '#EF6C00',
+    },
+  },
 });
 
 // Assumes you have a <div id="app"></div> in your index.html

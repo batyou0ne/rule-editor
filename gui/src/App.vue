@@ -27,8 +27,8 @@
       @login="onLogin"
     />
     <template v-else>
-      <div class="col-auto row justify-end q-pa-sm" v-if="authEnabled">
-        <q-btn flat dense label="Logout" @click="onLogout" />
+      <div class="col-auto row justify-end q-px-md q-py-xs" v-if="authEnabled" style="background: #1B2A4A;">
+        <q-btn flat dense label="Logout" text-color="white" icon="mdi-logout" @click="onLogout" size="sm" />
       </div>
       <div class="col-auto">
         <NavigationBar v-model:activeView="activeView"/>

@@ -61,6 +61,7 @@ const store = createStore({
     return {
       step: 1, //step in the process
       frames: [], //list of frames in interpretation
+      deletedFramesStack: [], //undo stack for deleted frames
       frameBeingEdited: null, //frame for which editor-pane is opened
       framesOpenInEditor: [], //list of frames in edit mode. any new frames are not saved to the frames list.
       booleanConstructBeingEdited: null, //boolean-field being edited, so we can add clicked frame to it
@@ -190,7 +191,33 @@ const store = createStore({
       frame["id"] = uuid4();
       state.frames = [...state.frames, frame];
     },
+    undoDeleteFrame(state) {
+      if (state.deletedFramesStack.length === 0) return;
+      const { frame, frameIndex, annotationSnippets } = state.deletedFramesStack.pop();
+      // Restore frame at original position
+      state.frames.splice(frameIndex, 0, frame);
+      // Restore annotations to their original snippets
+      annotationSnippets.forEach(({ snippet, annotation }) => {
+        snippet.addAnnotation(annotation);
+      });
+    },
     removeFrame(state, frame) {
+      // Collect annotations before deletion for undo
+      const annotationSnippets = [];
+      state.sourceDocuments.forEach((doc) => {
+        doc.sentences.forEach((sentence) => {
+          sentence.snippets.forEach((snippet) => {
+            snippet.annotations.forEach((annotation) => {
+              if (annotation.frame && annotation.frame.id === frame.id) {
+                annotationSnippets.push({ snippet, annotation });
+              }
+            });
+          });
+        });
+      });
+      const frameIndex = state.frames.findIndex((f) => f.id == frame.id);
+      state.deletedFramesStack.push({ frame, frameIndex, annotationSnippets });
+
       //check if frame in editing list
       const openFrameIndex = state.framesOpenInEditor.findIndex(
         (f) => f.id == frame.id,
@@ -198,7 +225,7 @@ const store = createStore({
       if (openFrameIndex != -1) {
         state.framesOpenInEditor.splice(openFrameIndex, 1);
       }
-      if (state.frameBeingEdited.id == frame.id) {
+      if (state.frameBeingEdited && state.frameBeingEdited.id == frame.id) {
         const nrFramesOpen = state.framesOpenInEditor.length;
         //if frame is the one being edited, assign other frame
         //to be open in editor, if there are any other frames being edited
@@ -207,7 +234,6 @@ const store = createStore({
         state.booleanConstructBeingEdited = null;
       }
       //remove frame from frames list
-      const frameIndex = state.frames.findIndex((f) => f.id == frame.id);
       if (frameIndex != -1) {
         state.frames.splice(frameIndex, 1);
       }
@@ -584,6 +610,7 @@ const store = createStore({
       context.state.frameBeingEdited = null;
       context.state.framesOpenInEditor = [];
       context.state.booleanConstructBeingEdited = null;
+      context.state.deletedFramesStack = [];
       context.state.executableSelectedIds = [];
       context.state.executableClickOrder = [];
       context.state.executableAgentInstanceNames = {};

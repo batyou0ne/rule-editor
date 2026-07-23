@@ -70,13 +70,13 @@ export default {
 </script>
 
 <template>
-  <div class="row q-gutter-sm q-ma-sm save-load-button-container">
+  <div class="save-load-button-container">
     <q-btn
       round
       size="sm"
       icon="mdi-file-upload-outline"
-      color="white"
-      text-color="primary"
+      flat
+      text-color="white"
     >
       <q-menu fit transition-show="jump-down" transition-hide="jump-up">
         <q-list>
@@ -117,7 +117,7 @@ export default {
           </q-item>
         </q-list>
       </q-menu>
-      <q-tooltip class="bg-blue-1 text-grey-10 text-body2">
+      <q-tooltip>
         <div>Load an interpretation</div>
       </q-tooltip>
     </q-btn>
@@ -125,8 +125,8 @@ export default {
       round
       size="sm"
       icon="mdi-content-save"
-      color="white"
-      text-color="primary"
+      flat
+      text-color="white"
     >
       <q-menu fit transition-show="jump-down" transition-hide="jump-up">
         <q-list>
@@ -177,7 +177,7 @@ export default {
           </q-item>
         </q-list>
       </q-menu>
-      <q-tooltip class="bg-blue-1 text-grey-10 text-body2">
+      <q-tooltip>
         <div>Save the current interpretation</div>
       </q-tooltip>
     </q-btn>
@@ -206,9 +206,12 @@ export default {
 }
 
 .save-load-button-container {
-  /* border-left: 2px solid #1976D2; */
-  background-color: #b6d1ec;
-  padding: 0px 7px 7px 0px;
-  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 6px 10px;
+  border-radius: 6px;
+  gap: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

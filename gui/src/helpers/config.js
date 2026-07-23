@@ -13,43 +13,42 @@ const icons = {
 // colors per frame type / frame subtype
 const colors = {
   fact: "primary",
-  agent: "warning",
+  agent: "accent",
   object: "amber-10",
   action: "secondary",
   duty: "info",
   condition: "positive",
-  multiple: "blue-grey-6",
+  multiple: "blue-grey-7",
   act: "deep-purple-10",
   claim_duty: "pink-14"
 };
 
 //used for underlining
 const hexColors = {
-  fact: "#1976D2",
-  agent: "#F2C037",
-  object: "#ff6f00",
-  action: "#26A69A",
-  duty: "#31CCEC",
-  condition: "#21BA45",
-  multiple: "#1a7d8b",
-  act: "#311b92",
-  claim_duty: "#c51162",
-
+  fact: "#1B2A4A",
+  agent: "#C7963E",
+  object: "#D47A1A",
+  action: "#3A7CA5",
+  duty: "#0277BD",
+  condition: "#2E7D32",
+  multiple: "#546E7A",
+  act: "#4527A0",
+  claim_duty: "#AD1457",
 };
 
 //used for highlighting source text and for node colors in network
 const hexColorsLight = {
-  fact: "#b3d9ff",
-  agent: "#ffdd80",
-  object: "#ffc496",
-  action: "#80fff3",
-  duty: "#80e9ff",
-  condition: "#a8ffbd",
-  multiple: "#b4cbcf",
-  act: "#c0b3ff",
-  claim_duty: "#ffadd3",
-  list: "#dddddd",
-  booleanConstruct: "#dddddd"
+  fact: "#C8D4E8",
+  agent: "#F2E0BA",
+  object: "#F5D4B0",
+  action: "#B8DAE9",
+  duty: "#B3E0F7",
+  condition: "#B8E6C0",
+  multiple: "#C5D1D5",
+  act: "#D1C4F7",
+  claim_duty: "#F5B8D4",
+  list: "#E2E6EC",
+  booleanConstruct: "#E2E6EC"
 };
 
 //used for sizing nodes in network

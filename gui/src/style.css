@@ -4,3 +4,96 @@ body,
   margin: 0;
   height: 100vh;
 }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #F5F6F8;
+  color: #1B2A4A;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.q-card {
+  border-radius: 6px !important;
+  box-shadow: 0 1px 3px rgba(13, 27, 42, 0.08), 0 1px 2px rgba(13, 27, 42, 0.06) !important;
+  border: 1px solid #E2E6EC !important;
+}
+
+.q-card--bordered {
+  border: 1px solid #E2E6EC !important;
+}
+
+.q-separator {
+  background-color: #E2E6EC !important;
+}
+
+.q-btn {
+  text-transform: none !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  border-radius: 5px !important;
+}
+
+.q-input .q-field__control {
+  border-radius: 5px !important;
+}
+
+.q-tab {
+  text-transform: none !important;
+  font-weight: 500 !important;
+}
+
+.q-tooltip {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  background-color: #1B2A4A !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+  padding: 6px 10px !important;
+}
+
+.q-list .q-item {
+  border-radius: 4px;
+}
+
+.q-expansion-item__toggle-icon {
+  color: #3A7CA5 !important;
+}
+
+.text-subtitle1,
+.text-subtitle2 {
+  font-weight: 600 !important;
+  color: #1B2A4A !important;
+}
+
+.text-caption {
+  color: #5A6A80 !important;
+}
+
+.text-h6 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  color: #1B2A4A !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4CAD4;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9AA3B0;
+}
+
+::selection {
+  background-color: rgba(58, 124, 165, 0.2);
+}

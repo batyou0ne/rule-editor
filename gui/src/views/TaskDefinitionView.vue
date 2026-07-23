@@ -12,7 +12,7 @@
         <q-item-section avatar>
           <q-avatar>
             <q-icon name="mdi-information-outline" class="cursor-pointer"></q-icon>
-            <q-tooltip class="bg-blue-1 text-grey-10 text-body2">
+            <q-tooltip>
               <div style="max-width: 300px">Define a task.</div>
             </q-tooltip>
           </q-avatar>

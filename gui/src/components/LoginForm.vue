@@ -1,14 +1,13 @@
 <template>
-  <div class="fit row items-center justify-center q-pa-md">
-    <q-card flat bordered style="width: 100%; max-width: 420px;">
-      <q-card-section>
-        <div class="text-h6">Sign in</div>
-        <div class="text-caption text-grey-7">Use your username and password to access the editor.</div>
+  <div class="login-page fit row items-center justify-center q-pa-md">
+    <q-card flat bordered class="login-card" style="width: 100%; max-width: 420px;">
+      <q-card-section class="login-header text-center">
+        <q-icon name="mdi-scale-balance" size="36px" color="white" />
+        <div class="login-title">FLINT Rule Editor</div>
+        <div class="login-org">University of Amsterdam</div>
       </q-card-section>
 
-      <q-separator />
-
-      <q-card-section class="q-gutter-md">
+      <q-card-section class="q-gutter-md q-pt-lg">
         <q-input
           v-model="username"
           label="Username"
@@ -31,12 +30,52 @@
         </q-banner>
       </q-card-section>
 
-      <q-card-actions align="right">
-        <q-btn color="primary" label="Login" :loading="loading" @click="submit" />
+      <q-card-actions class="q-px-md q-pb-md">
+        <q-btn
+          color="primary"
+          label="Sign in"
+          :loading="loading"
+          @click="submit"
+          class="full-width"
+          unelevated
+          size="md"
+        />
       </q-card-actions>
     </q-card>
   </div>
 </template>
+
+<style scoped>
+.login-page {
+  background: linear-gradient(160deg, #1B2A4A 0%, #243B5E 40%, #3A7CA5 100%);
+  min-height: 100vh;
+}
+
+.login-card {
+  background: #fff !important;
+  overflow: hidden;
+}
+
+.login-header {
+  background: linear-gradient(135deg, #1B2A4A 0%, #243B5E 100%);
+  padding: 28px 20px 24px !important;
+}
+
+.login-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.login-org {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+}
+</style>
 
 <script>
 export default {
