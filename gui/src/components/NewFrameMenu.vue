@@ -10,10 +10,6 @@
       </q-btn>
     </div>
     <q-space />
-    <q-btn v-if="$store.state.deletedFramesStack.length > 0" size="sm" color="warning" @click="$store.commit('undoDeleteFrame')">
-      Undo Delete
-      <q-tooltip class="text-subtitle2">Restore the last deleted frame</q-tooltip>
-    </q-btn>
   </div>
 </template>
 

@@ -61,7 +61,7 @@ const store = createStore({
     return {
       step: 1, //step in the process
       frames: [], //list of frames in interpretation
-      deletedFramesStack: [], //undo stack for deleted frames
+      undoStack: [], //generic undo stack — entries: { label, restore }
       frameBeingEdited: null, //frame for which editor-pane is opened
       framesOpenInEditor: [], //list of frames in edit mode. any new frames are not saved to the frames list.
       booleanConstructBeingEdited: null, //boolean-field being edited, so we can add clicked frame to it
@@ -191,15 +191,18 @@ const store = createStore({
       frame["id"] = uuid4();
       state.frames = [...state.frames, frame];
     },
-    undoDeleteFrame(state) {
-      if (state.deletedFramesStack.length === 0) return;
-      const { frame, frameIndex, annotationSnippets } = state.deletedFramesStack.pop();
-      // Restore frame at original position
-      state.frames.splice(frameIndex, 0, frame);
-      // Restore annotations to their original snippets
-      annotationSnippets.forEach(({ snippet, annotation }) => {
-        snippet.addAnnotation(annotation);
-      });
+    pushUndo(state, entry) {
+      // entry: { label: string, restore: () => void }
+      if (!entry || typeof entry.restore !== "function") return;
+      state.undoStack.push(entry);
+      if (state.undoStack.length > 50) state.undoStack.shift();
+    },
+    performUndo(state) {
+      const entry = state.undoStack.pop();
+      if (entry) entry.restore();
+    },
+    clearUndoStack(state) {
+      state.undoStack = [];
     },
     removeFrame(state, frame) {
       // Collect annotations before deletion for undo
@@ -216,7 +219,17 @@ const store = createStore({
         });
       });
       const frameIndex = state.frames.findIndex((f) => f.id == frame.id);
-      state.deletedFramesStack.push({ frame, frameIndex, annotationSnippets });
+      const frameLabel = frame.shortName || frame.label || frame.fact || "frame";
+      state.undoStack.push({
+        label: `Delete frame "${frameLabel}"`,
+        restore: () => {
+          state.frames.splice(frameIndex, 0, frame);
+          annotationSnippets.forEach(({ snippet, annotation }) => {
+            snippet.addAnnotation(annotation);
+          });
+        },
+      });
+      if (state.undoStack.length > 50) state.undoStack.shift();
 
       //check if frame in editing list
       const openFrameIndex = state.framesOpenInEditor.findIndex(
@@ -248,10 +261,75 @@ const store = createStore({
       );
     },
     deleteAnnotation(state, annotation) {
-      //go through all snippets and remove annotation from them, if they contain the annotation
+      // Capture which snippets hold this annotation so we can restore
+      const affectedSnippets = [];
+      state.sourceDocuments.forEach((doc) => {
+        doc.sentences.forEach((sentence) => {
+          sentence.snippets.forEach((snippet) => {
+            if (snippet.annotations.includes(annotation)) {
+              affectedSnippets.push(snippet);
+            }
+          });
+        });
+      });
       state.sourceDocuments.forEach((doc) => {
         doc.deleteAnnotation(annotation);
       });
+      state.undoStack.push({
+        label: "Delete annotation",
+        restore: () => {
+          affectedSnippets.forEach((snippet) => snippet.addAnnotation(annotation));
+        },
+      });
+      if (state.undoStack.length > 50) state.undoStack.shift();
+    },
+    removeSourceDocument(state, docIndex) {
+      if (docIndex < 0 || docIndex >= state.sourceDocuments.length) return;
+      const [doc] = state.sourceDocuments.splice(docIndex, 1);
+      state.undoStack.push({
+        label: `Remove source "${doc.title || "document"}"`,
+        restore: () => {
+          state.sourceDocuments.splice(docIndex, 0, doc);
+        },
+      });
+      if (state.undoStack.length > 50) state.undoStack.shift();
+    },
+    removeBooleanConstruct(state, node) {
+      // node: a BooleanConstruct instance. If it has a parent, splice it out;
+      // otherwise clean it in place. Both are reversible via snapshot.
+      if (!node) return;
+      if (node.parent) {
+        const parent = node.parent;
+        const index = parent.children.indexOf(node);
+        if (index === -1) return;
+        parent.children.splice(index, 1);
+        state.undoStack.push({
+          label: "Delete boolean construct",
+          restore: () => {
+            parent.children.splice(index, 0, node);
+            node.parent = parent;
+          },
+        });
+      } else {
+        const snapshot = {
+          frame: node.frame,
+          children: [...node.children],
+          isNegated: node.isNegated,
+          operatorToJoinChildren: node.operatorToJoinChildren,
+        };
+        node.clean();
+        state.undoStack.push({
+          label: "Clear boolean construct",
+          restore: () => {
+            node.frame = snapshot.frame;
+            node.children = snapshot.children;
+            node.isNegated = snapshot.isNegated;
+            node.operatorToJoinChildren = snapshot.operatorToJoinChildren;
+            snapshot.children.forEach((c) => { c.parent = node; });
+          },
+        });
+      }
+      if (state.undoStack.length > 50) state.undoStack.shift();
     },
     setTaskOverview(state, status) {
       state.showTaskOverview = status;
@@ -610,7 +688,7 @@ const store = createStore({
       context.state.frameBeingEdited = null;
       context.state.framesOpenInEditor = [];
       context.state.booleanConstructBeingEdited = null;
-      context.state.deletedFramesStack = [];
+      context.state.undoStack = [];
       context.state.executableSelectedIds = [];
       context.state.executableClickOrder = [];
       context.state.executableAgentInstanceNames = {};

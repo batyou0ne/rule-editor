@@ -6,6 +6,7 @@
         <span class="nav-title">FLINT Rule Editor</span>
       </div>
       <div class="nav-actions">
+        <UndoButton/>
         <LoadSaveInterpretationBanner/>
       </div>
     </div>
@@ -32,6 +33,7 @@ import MakeExecutableView from "../views/executable/MakeExecutableView.vue";
 import ExecuteTaskView from "../views/executable/ExecuteTaskView.vue";
 import ExportInspectView from "../views/ExportInspectView.vue"; //newly added -batu
 import LoadSaveInterpretationBanner from "./LoadSaveIntepretationBanner.vue"
+import UndoButton from "./UndoButton.vue"
 import { markRaw } from 'vue' //to prevent components from becoming reactie
 
 export default {
@@ -95,7 +97,8 @@ export default {
     TaskDefinitionView,
     InterpretationView,
     SourceCollectionView,
-    LoadSaveInterpretationBanner
+    LoadSaveInterpretationBanner,
+    UndoButton,
   },
   mounted() {
     this.updateActiveView(this.views[0])
@@ -140,6 +143,7 @@ export default {
 .nav-actions {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .nav-tabs {
