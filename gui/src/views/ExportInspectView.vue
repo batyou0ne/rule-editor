@@ -292,7 +292,7 @@
               <q-btn flat dense size="sm" icon="mdi-content-copy" label="Copy" @click="copyEflint" />
             </div>
             <div v-if="eflintCode" class="eflint-code-block">
-              <pre>{{ eflintCode }}</pre>
+              <EflintEditor :model-value="eflintCode" readonly />
             </div>
             <div v-else class="text-grey-6 text-body2">
               No eFLINT code generated yet. Use the "Make interpretations executable" tab first.
@@ -309,11 +309,14 @@
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 import { useQuasar } from 'quasar'
+import EflintEditor from '../components/EflintEditor.vue'
 
 const STORAGE_KEY = 'flint-editor.github'
 
 export default {
   name: 'ExportInspectView',
+
+  components: { EflintEditor },
 
   setup() {
     const $q = useQuasar()
@@ -619,20 +622,9 @@ export default {
 }
 
 .eflint-code-block {
-  background: #0D1B2A;
+  border: 1px solid #E2E6EC;
   border-radius: 8px;
-  padding: 16px;
-  overflow-x: auto;
-}
-
-.eflint-code-block pre {
-  margin: 0;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: 12px;
-  line-height: 1.6;
-  color: #C8D4E8;
-  white-space: pre-wrap;
-  word-break: break-word;
+  overflow: hidden;
 }
 
 /* GitHub push log */
