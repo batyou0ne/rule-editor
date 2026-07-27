@@ -6,10 +6,10 @@
     icon="mdi-undo"
     text-color="white"
     :disable="!canUndo"
-    :label="undefined"
+    :label="canUndo ? 'Undo' : 'Undo'"
     @click="performUndo"
   >
-    <q-tooltip v-if="canUndo">: {{ lastLabel }} (Ctrl+Z)</q-tooltip>
+    <q-tooltip v-if="canUndo">Undo: {{ lastLabel }} (Ctrl+Z)</q-tooltip>
     <q-tooltip v-else>Nothing to undo</q-tooltip>
   </q-btn>
 </template>
