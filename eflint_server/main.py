@@ -449,7 +449,6 @@ def register_spec(req: PhrasesRequest, x_session_id: SessionHeader = None):
     return result
 
 
-
 @app.post("/query/enabled")
 def query_enabled(req: StatementRequest, x_session_id: SessionHeader = None):
     session_id = _require_session_id(x_session_id)
