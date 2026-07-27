@@ -31,3 +31,6 @@ eFLINT_reasoner_backend/.venv/
 
 # Claude Code (personal tool config)
 .claude/
+
+
+git-service/.venv/
