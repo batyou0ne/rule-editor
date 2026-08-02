@@ -1,17 +1,32 @@
 <template>
-  <div class="row items-center">
-    <div class="q-ml-lg row items-center q-gutter-xs cursor-pointer nav-button text-primary"
-      :class="{'selected': activeView?.id == view.id}"
-      v-for="view in views"
-      @click="this.updateActiveView(view)">
-       <q-icon :name="view.icon" size="sm"/>
-         <div>
-          {{ view.label }}
-         </div>
+  <div class="nav-wrapper">
+    <div class="nav-header">
+      <div class="nav-brand">
+        <q-icon name="mdi-scale-balance" size="24px" color="white" class="q-mr-sm" />
+        <span class="nav-title">FLINT Rule Editor</span>
+      </div>
+      <div class="nav-actions">
+        <q-btn
+          flat dense size="sm" icon="mdi-history"
+          text-color="white"
+          @click="whatsNewOpen = true"
+        >
+          <q-tooltip>What's new?</q-tooltip>
+        </q-btn>
+        <LoadSaveInterpretationBanner/>
+      </div>
+      <WhatsNewModal v-model="whatsNewOpen" />
     </div>
-    <div class="q-ml-lg col">
-      <div class="float-right">
-        <LoadSaveInterpretationBanner/></div>
+    <div class="nav-tabs">
+      <div class="nav-tabs-row">
+        <div class="row items-center q-gutter-xs cursor-pointer nav-button"
+          :class="{'selected': activeView?.id == view.id}"
+          v-for="view in views"
+          @click="this.updateActiveView(view)">
+          <q-icon :name="view.icon" size="18px"/>
+          <div>{{ view.label }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -24,10 +39,12 @@ import VisualizationView from "../views/visualization/VisualizationView.vue";
 import MakeExecutableView from "../views/executable/MakeExecutableView.vue";
 import ExecuteTaskView from "../views/executable/ExecuteTaskView.vue";
 import LoadSaveInterpretationBanner from "./LoadSaveIntepretationBanner.vue"
-import { markRaw } from 'vue' //to prevent components from becoming reactie
+import WhatsNewModal from "./WhatsNewModal.vue"
+import { markRaw } from 'vue'
 
 export default {
     data: () => ({
+    whatsNewOpen: false,
     views: [
       {
         id:0,
@@ -59,7 +76,7 @@ export default {
       },
       {
         id: 4,
-        label: "Make interpretations executable", 
+        label: "Make interpretations executable",
         component: markRaw(MakeExecutableView),
         completed: false,
         icon: 'mdi-timeline-check-outline'
@@ -80,7 +97,8 @@ export default {
     TaskDefinitionView,
     InterpretationView,
     SourceCollectionView,
-    LoadSaveInterpretationBanner
+    LoadSaveInterpretationBanner,
+    WhatsNewModal,
   },
   mounted() {
     this.updateActiveView(this.views[0])
@@ -90,19 +108,69 @@ export default {
       this.$emit('update:activeView', newView);
     }
   }
-
 }
 </script>
 
 <style>
+.nav-wrapper {
+  background: #fff;
+  border-bottom: 1px solid #E2E6EC;
+}
+.nav-header {
+  background: linear-gradient(135deg, #1B2A4A 0%, #243B5E 100%);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+}
+.nav-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-tabs {
+  padding: 0 12px;
+  background: #fff;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.nav-tabs-row {
+  display: inline-flex;
+  align-items: center;
+  min-width: 100%;
+  justify-content: center;
+}
 .nav-button {
-  border-bottom: 2px solid #ffffff00;
-  padding: 8px 2px;
+  border-bottom: 2px solid transparent;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #5A6A80;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 .nav-button:hover {
-  border-bottom: 2px solid #b6d1ec;
+  color: #1B2A4A;
+  border-bottom: 2px solid #C7963E;
+  background: rgba(199, 150, 62, 0.04);
 }
 .nav-button.selected {
-  border-bottom: 2px solid #b6d1ec;
+  color: #1B2A4A;
+  border-bottom: 2px solid #C7963E;
+  font-weight: 600;
 }
 </style>
