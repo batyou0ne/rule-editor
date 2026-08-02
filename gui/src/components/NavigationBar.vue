@@ -6,9 +6,17 @@
         <span class="nav-title">FLINT Rule Editor</span>
       </div>
       <div class="nav-actions">
+        <q-btn
+          flat dense size="sm" icon="mdi-history"
+          text-color="white"
+          @click="whatsNewOpen = true"
+        >
+          <q-tooltip>What's new?</q-tooltip>
+        </q-btn>
         <UndoButton/>
         <LoadSaveInterpretationBanner/>
       </div>
+      <WhatsNewModal v-model="whatsNewOpen" />
     </div>
     <div class="nav-tabs">
       <div class="nav-tabs-row">
@@ -34,10 +42,12 @@ import ExecuteTaskView from "../views/executable/ExecuteTaskView.vue";
 import ExportInspectView from "../views/ExportInspectView.vue"; //newly added -batu
 import LoadSaveInterpretationBanner from "./LoadSaveIntepretationBanner.vue"
 import UndoButton from "./UndoButton.vue"
+import WhatsNewModal from "./WhatsNewModal.vue"
 import { markRaw } from 'vue' //to prevent components from becoming reactie
 
 export default {
     data: () => ({
+    whatsNewOpen: false,
     views: [
       {
         id:0,
@@ -99,6 +109,7 @@ export default {
     SourceCollectionView,
     LoadSaveInterpretationBanner,
     UndoButton,
+    WhatsNewModal,
   },
   mounted() {
     this.updateActiveView(this.views[0])
