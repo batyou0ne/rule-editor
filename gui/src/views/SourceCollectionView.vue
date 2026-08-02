@@ -25,7 +25,7 @@
                         @click="sourceDocument.sentenceTree.selected = true">Select all</q-btn>
                       <q-btn color="negative" @click="sourceDocument.sentenceTree.selected = false">Deselect
                         all</q-btn>
-                        <q-btn class="float-right" icon="mdi-close" @click="$store.state.sourceDocuments.splice(docIndex,1)">Remove source from interpretation</q-btn>
+                        <q-btn class="float-right" icon="mdi-close" @click="$store.commit('removeSourceDocument', docIndex)">Remove source from interpretation</q-btn>
                     </q-card-section>
                     <q-card-section class="q-pt-none expansion-items">
                       <ListComponent :sourceDocument="sourceDocument" />
