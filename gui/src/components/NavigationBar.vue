@@ -13,6 +13,7 @@
         >
           <q-tooltip>What's new?</q-tooltip>
         </q-btn>
+        <UndoButton/>
         <LoadSaveInterpretationBanner/>
       </div>
       <WhatsNewModal v-model="whatsNewOpen" />
@@ -38,9 +39,11 @@ import InterpretationView from "../views/interpretation/InterpretationView.vue";
 import VisualizationView from "../views/visualization/VisualizationView.vue";
 import MakeExecutableView from "../views/executable/MakeExecutableView.vue";
 import ExecuteTaskView from "../views/executable/ExecuteTaskView.vue";
+import ExportInspectView from "../views/ExportInspectView.vue"; //newly added -batu
 import LoadSaveInterpretationBanner from "./LoadSaveIntepretationBanner.vue"
+import UndoButton from "./UndoButton.vue"
 import WhatsNewModal from "./WhatsNewModal.vue"
-import { markRaw } from 'vue'
+import { markRaw } from 'vue' //to prevent components from becoming reactie
 
 export default {
     data: () => ({
@@ -88,6 +91,13 @@ export default {
         completed: false,
         icon: 'mdi-playlist-check'
       },
+      {
+        id: 6,
+        label: "Inspect & Export",
+        component: markRaw(ExportInspectView),
+        completed: false,
+        icon: 'mdi-export-variant'
+      },
     ],
   }),
   props: {
@@ -98,6 +108,7 @@ export default {
     InterpretationView,
     SourceCollectionView,
     LoadSaveInterpretationBanner,
+    UndoButton,
     WhatsNewModal,
   },
   mounted() {
@@ -163,11 +174,13 @@ export default {
   align-items: center;
   gap: 5px;
 }
+
 .nav-button:hover {
   color: #1B2A4A;
   border-bottom: 2px solid #C7963E;
   background: rgba(199, 150, 62, 0.04);
 }
+
 .nav-button.selected {
   color: #1B2A4A;
   border-bottom: 2px solid #C7963E;

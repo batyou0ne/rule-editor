@@ -9,31 +9,13 @@
 
       <q-card-section>
         <div class="text-caption q-mb-xs">Specification</div>
-        <q-input
-          v-model="eflintBase"
-          type="textarea"
-          autogrow
-          outlined
-          input-style="font-family: monospace;"
-        />
+        <EflintEditor v-model="eflintBase" />
 
         <div class="text-caption q-mt-md q-mb-xs">Scenario</div>
-        <q-input
-          v-model="eflintFinal"
-          type="textarea"
-          autogrow
-          outlined
-          input-style="font-family: monospace;"
-        />
+        <EflintEditor v-model="eflintFinal" />
 
         <div class="text-caption q-mt-md q-mb-xs">Queries</div>
-        <q-input
-          v-model="eflintQuery"
-          type="textarea"
-          autogrow
-          outlined
-          input-style="font-family: monospace;"
-        />
+        <EflintEditor v-model="eflintQuery" />
       </q-card-section>
 
       <q-separator />
@@ -100,8 +82,11 @@ import {
   buildReplSessionStartUrl,
   buildReplSessionStopUrl,
 } from "../../services/eflintEndpoints.js";
+import EflintEditor from "../../components/EflintEditor.vue";
 export default {
   name: "ExecuteTaskView",
+
+  components: { EflintEditor },
 
   data() {
     return {
@@ -367,10 +352,10 @@ export default {
 
 <style scoped>
 .repl-terminal {
-  background: #000;
-  color: #d4ffd4;
+  background: #0D1B2A;
+  color: #C8D4E8;
   border-radius: 6px;
-  border: 1px solid #333;
+  border: 1px solid #1B2A4A;
   min-height: 260px;
   max-height: 420px;
   overflow: auto;
