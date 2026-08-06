@@ -1,0 +1,90 @@
+[
+  {
+    "version": "v1.4",
+    "date": "2026-08-02",
+    "status": "unreleased",
+    "sections": [
+      {
+        "type": "Features",
+        "items": [
+          "Added global Undo button (Ctrl+Z / ⌘+Z) to header — covers frame deletion, annotation removal, source document removal, and boolean construct deletion",
+          "Added eFLINT syntax highlighting across all code editors (Inspect & Export, Make interpretations executable, Interactive eFLINT)",
+          "Changed favicon to eFLINT brain icon"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "v1.3",
+    "date": "2026-07-27",
+    "status": "released",
+    "sections": [
+      {
+        "type": "Features",
+        "items": [
+          "Added Inspect & Export tab with Push to GitHub and Export to Folder functionality",
+          "Added git-service backend microservice for version-controlled interpretation storage",
+          "Added Prometheus & Grafana monitoring stack with health checks",
+          "Added webhook alert mechanism for push errors"
+        ]
+      },
+      {
+        "type": "Fixes",
+        "items": [
+          "Switched act query semantics from ?Holds to ?Enabled"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "v1.2",
+    "date": "2026-07-14",
+    "status": "released",
+    "sections": [
+      {
+        "type": "Features",
+        "items": [
+          "Added automatic version folders (v1, v2, v3…) per interpretation push",
+          "Reworked GUI brand colors and navigation design"
+        ]
+      },
+      {
+        "type": "Chores",
+        "items": [
+          "Added repo change guide for onboarding new contributors",
+          "Fixed GUI Dockerfile Node version"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "v1.1",
+    "date": "2026-06-01",
+    "status": "released",
+    "sections": [
+      {
+        "type": "Features",
+        "items": [
+          "Added eFLINT server integration and expert mode",
+          "Added Interactive eFLINT tab (Execute task)",
+          "Added Make interpretations executable tab"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "v1.0",
+    "date": "2026-05-01",
+    "status": "released",
+    "sections": [
+      {
+        "type": "Features",
+        "items": [
+          "Initial release: Set task, Collect sources, Interpret sources, View interpretation tabs",
+          "Annotation system for linking source text to FLINT frames",
+          "Boolean construct (AND/OR/NOT) precondition editor"
+        ]
+      }
+    ]
+  }
+]

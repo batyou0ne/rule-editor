@@ -79,7 +79,7 @@ export default {
       },
       {
         id: 4,
-        label: "Make interpretations executable", 
+        label: "Make interpretations executable",
         component: markRaw(MakeExecutableView),
         completed: false,
         icon: 'mdi-timeline-check-outline'
@@ -119,7 +119,6 @@ export default {
       this.$emit('update:activeView', newView);
     }
   }
-
 }
 </script>
 
@@ -128,7 +127,6 @@ export default {
   background: #fff;
   border-bottom: 1px solid #E2E6EC;
 }
-
 .nav-header {
   background: linear-gradient(135deg, #1B2A4A 0%, #243B5E 100%);
   padding: 10px 20px;
@@ -136,12 +134,10 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
-
 .nav-brand {
   display: flex;
   align-items: center;
 }
-
 .nav-title {
   font-family: 'Inter', sans-serif;
   font-size: 16px;
@@ -149,28 +145,23 @@ export default {
   color: #ffffff;
   letter-spacing: 0.02em;
 }
-
-
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .nav-tabs {
   padding: 0 12px;
   background: #fff;
   overflow-x: auto;
   white-space: nowrap;
 }
-
 .nav-tabs-row {
   display: inline-flex;
   align-items: center;
   min-width: 100%;
   justify-content: center;
 }
-
 .nav-button {
   border-bottom: 2px solid transparent;
   padding: 10px 14px;
