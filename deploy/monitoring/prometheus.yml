@@ -12,12 +12,24 @@ scrape_configs:
     params:
       module: [http_2xx]
     static_configs:
+      # severity=critical  → fires after 1 min down, Slack alert sent
       - targets:
           - https://rule-editor.nl/
           - http://auth-service:8001/health
+        labels:
+          severity: critical
+      # severity=warning   → fires after 3 min down, Slack alert sent
+      # To silence alerts for a specific service, move it to the "excluded" group below.
+      - targets:
           - http://flint-to-eflint:8000/health
           - http://mongo-api:8002/health
           - http://git-service:8103/health
+        labels:
+          severity: warning
+      # severity=excluded  → monitored (visible in Grafana) but never triggers an alert
+      - targets: []
+        labels:
+          severity: excluded
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target

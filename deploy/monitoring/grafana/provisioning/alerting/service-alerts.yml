@@ -1,0 +1,160 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: Service Health
+    folder: Alerts
+    # How often Grafana re-evaluates every rule in this group.
+    # Lowering this gives faster detection but increases Prometheus query load.
+    interval: 1m
+
+    rules:
+      # ------------------------------------------------------------------ #
+      # CRITICAL — public-facing or auth services                           #
+      # Fires if a service stays down for FOR_CRITICAL (default: 1 minute). #
+      # To exclude a service from this rule, move it to severity=warning    #
+      # or severity=excluded in prometheus.yml.                             #
+      # ------------------------------------------------------------------ #
+      - uid: service-down-critical
+        title: "Critical Service Down"
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: probe_success{job="service-health", severity="critical"} == 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+              expression: A
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        # Timeout: service must be continuously down for this duration before alert fires.
+        # Increase to reduce false positives from brief network blips (e.g. "2m", "5m").
+        for: 1m
+        annotations:
+          summary: "Critical service {{ $labels.instance }} has been down for > 1 minute"
+          description: "Probe failed for {{ $labels.instance }}. Check the service logs."
+        labels:
+          severity: critical
+        isPaused: false
+
+      # ------------------------------------------------------------------ #
+      # WARNING — internal backend services                                 #
+      # Same logic but a longer timeout to reduce noise for less critical   #
+      # services.  Default: 3 minutes.                                      #
+      # ------------------------------------------------------------------ #
+      - uid: service-down-warning
+        title: "Service Down"
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: probe_success{job="service-health", severity="warning"} == 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+              expression: A
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        # Timeout: increase further (e.g. "5m", "10m") if these services restart
+        # frequently during deployments and you want to suppress transient alerts.
+        for: 3m
+        annotations:
+          summary: "Service {{ $labels.instance }} has been down for > 3 minutes"
+          description: "Probe failed for {{ $labels.instance }}. Check the service logs."
+        labels:
+          severity: warning
+        isPaused: false
+
+      # ------------------------------------------------------------------ #
+      # MongoDB TCP connectivity                                            #
+      # ------------------------------------------------------------------ #
+      - uid: mongodb-down
+        title: "MongoDB Unreachable"
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: probe_success{job="mongodb-tcp"} == 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+              expression: A
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "MongoDB ({{ $labels.instance }}) is unreachable for > 2 minutes"
+          description: "TCP probe to MongoDB failed. Check container status and disk space."
+        labels:
+          severity: critical
+        isPaused: false
